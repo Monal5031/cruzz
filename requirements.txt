@@ -1,0 +1,8 @@
+django==2.0.6
+django-heroku==0.3.1
+gunicorn==19.8.1
+psycopg2
+django-progressive-web-app
+python-social-auth[django]
+python-decouple
+django-widget-tweaks

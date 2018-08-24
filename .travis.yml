@@ -1,0 +1,36 @@
+language: python
+python:
+  - 3.6
+services:
+  - postgresql
+env:
+  -DJANGO=2.0.6
+  -DB=postgresql
+  -DEBUG=True
+  -DB_NAME=cruzz_db
+  -DB_USER=cruzz
+  -DB_PASSWORD=cruzz
+  -DB_HOST=127.0.0.1
+  -DB_PORT=5432
+  -ALLOWED_HOSTS=*
+  -GH_KEY=123456test
+  -GH_SKEY=123456test
+  -TW_KEY=123456test
+  -TW_SKEY=123456test
+  -FB_KEY=123456test
+  -FB_SKEY=123456test
+  -G_KEY=123456test
+  -G_SKEY=123456test
+
+install:
+  - pip install -r requirements.txt
+before_script:
+  - psql -c "CREATE USER cruzz WITH CREATEUSER PASSWORD 'cruzz';" -U postgres
+  - psql -c "ALTER USER cruzz CREATEDB;" -U postgres
+  - psql -c "CREATE DATABASE cruzz_db;" -U postgres
+  - psql -c "GRANT ALL ON DATABASE cruzz_db TO cruzz;" -U postgres
+
+script:
+  - python manage.py makemigrations
+  - python manage.py migrate
+  - python manage.py test
