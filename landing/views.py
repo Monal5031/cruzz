@@ -6,8 +6,6 @@ from django.shortcuts import render, redirect
 from django.views import View
 from social_django.models import UserSocialAuth
 
-from  .forms import ProfileForm
-
 
 def land(request):
     return render(request, 'base.html')
