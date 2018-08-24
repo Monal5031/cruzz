@@ -8,7 +8,7 @@ from social_django.models import UserSocialAuth
 
 
 def land(request):
-    return render(request, 'base.html')
+    return render(request, 'home.html')
 
 
 class HomeView(View):
