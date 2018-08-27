@@ -16,6 +16,6 @@ class HomeView(View):
         return render(request, 'home.html')
 
 
-# only4 testing
+# only4 testing <3
 def test_func():
     return True
