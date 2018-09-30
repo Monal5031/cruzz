@@ -13,7 +13,7 @@ Auth type: Basic Auth
 
 URL:
 ```
-    http://127.0.0.1:8000/api/
+    http://127.0.0.1:8000/api/users/registration
 ```
 
 Body:
@@ -35,6 +35,11 @@ Method: POST
 Auth type: Basic Auth
 
 URL:
+```
+    http://127.0.0.1:8000/api/users/login
+```
+
+Body:
 ```json
 {
   "user": {
@@ -52,6 +57,11 @@ or alternatively, use Bearer Token Auth and send the Token in header as in point
 Method: GET
 
 Auth Type: Bearer Token
+
+URL:
+```
+    http://127.0.0.1:8000/api/users/checklogin/
+```
 
 No body here, since we are using Bearer Token
 
