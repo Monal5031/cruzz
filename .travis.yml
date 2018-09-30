@@ -21,6 +21,7 @@ env:
   -FB_SKEY=123456test
   -G_KEY=123456test
   -G_SKEY=123456test
+  -MODE=prod
 
 install:
   - pip install -r requirements.txt
