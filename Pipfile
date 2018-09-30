@@ -7,9 +7,10 @@ django = "*"
 gunicorn = "*"
 django-heroku = "*"
 django-progressive-web-app = "*"
-social-auth-app-django = '*'
-python-decouple = '*'
-django-widget-tweaks = '*'
+social-auth-app-django = "*"
+python-decouple = "*"
+django-widget-tweaks = "*"
+djangorestframework = "*"
 
 [requires]
 python_version = "3.6"
