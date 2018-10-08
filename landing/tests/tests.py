@@ -33,8 +33,8 @@ class AuthAPITest(TestCase):
         response_username = response.data['username']
         response_code = response.status_code
         with self.subTest():
-            self.assertEqual(response_email, 'mohit@yadav.com')
+            self.assertEqual(response_email, new_user['user']['email'])
         with self.subTest():
-            self.assertEqual(response_username, 'peace')
+            self.assertEqual(response_username, new_user['user']['username'])
         with self.subTest():
             self.assertEqual(response_code, 201)
