@@ -14,7 +14,8 @@ class TestViewTest(TestCase):
 
 class AuthAPITest(TestCase):
 
-    def test_register_new_user(self):
+    def test_register_login_update_user(self):
+        # create new user
         new_user = {
             "user":
             {
@@ -38,3 +39,27 @@ class AuthAPITest(TestCase):
             self.assertEqual(response_username, new_user['user']['username'])
         with self.subTest():
             self.assertEqual(response_code, 201)
+
+        # test for login
+        new_user = {
+            "user":
+            {
+                # TODO 1 login with username
+                "email": "mohit@yadav.com",
+                "password": "peacepeace"
+            }
+        }
+        view = views.LoginAPIView.as_view()
+        factory = APIRequestFactory()
+        request = factory.post('/api/users/login/', json.dumps(new_user), content_type='application/json')
+        response = view(request)
+        response_email = response.data['email']
+        # TODO 2 login with username
+        # response_username = response.data['username']
+        response_code = response.status_code
+        with self.subTest():
+            self.assertEqual(response_email, new_user['user']['email'])
+        # with self.subTest():
+            # self.assertEqual(response_username, new_user['user']['username'])
+        with self.subTest():
+            self.assertEqual(response_code, 200)
