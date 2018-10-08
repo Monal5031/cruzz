@@ -52,7 +52,7 @@ Body:
 or alternatively, use Bearer Token Auth and send the Token in header as in point 3.
 
 
-3. Checking logged in API.
+3. Update user data API.
 
 Method: GET
 
@@ -60,10 +60,10 @@ Auth Type: Bearer Token
 
 URL:
 ```
-    http://127.0.0.1:8000/api/users/checklogin/
+    http://127.0.0.1:8000/api/users/update/
 ```
 
-No body here, since we are using Bearer Token
+Method: GET
 
 Header:
 
@@ -72,3 +72,25 @@ Header:
 | Content-Type       | application/json        |
 | Authorization      | Token token_value_here  |
 
+Method: POST
+
+Auth Type: Bearer Token
+
+Header:
+
+| Key                | Value                   |
+|:------------------:|:-----------------------:|
+| Content-Type       | application/json        |
+| Authorization      | Token token_value_here  |
+
+Body:
+
+```
+{
+  "user": {
+  	"username": "peace",
+  	"email": "mohit@yadav.com",
+  	"first_name": "mohit"
+  }
+}
+```
