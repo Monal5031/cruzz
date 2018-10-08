@@ -89,8 +89,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # The `USERNAME_FIELD` property tells us which field we will use to log in.
     # In this case we want it to be the email field.
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
 
     # Tells Django that the UserManager class defined above should manage
     # objects of this type.
