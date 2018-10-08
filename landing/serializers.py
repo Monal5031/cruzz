@@ -38,13 +38,12 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Use the `create_user` method we wrote earlier to create a new user.
-        print(validated_data)
         return User.objects.create_user(validated_data)
 
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.CharField(max_length=255)
-    username = serializers.CharField(max_length=255, read_only=True)
+    email = serializers.CharField(max_length=255, required=False)
+    username = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=128, write_only=True)
     token = serializers.CharField(max_length=255, read_only=True)
 
@@ -54,14 +53,14 @@ class LoginSerializer(serializers.Serializer):
         # user in, this means validating that they've provided an email
         # and password and that this combination matches one of the users in
         # our database.
-        email = data.get('email', None)
         password = data.get('password', None)
+        username = data.get('username', None)
 
         # Raise an exception if an
-        # email is not provided.
-        if email is None:
+        # username is not provided.
+        if username is None:
             raise serializers.ValidationError(
-                'An email address is required to log in.'
+                'A username is required to log in.'
             )
 
         # Raise an exception if a
@@ -73,9 +72,9 @@ class LoginSerializer(serializers.Serializer):
 
         # The `authenticate` method is provided by Django and handles checking
         # for a user that matches this email/password combination. Notice how
-        # we pass `email` as the `username` value since in our User
-        # model we set `USERNAME_FIELD` as `email`.
-        user = authenticate(username=email, password=password)
+        # we pass `username` as the `username` value since in our User
+        # model we set `USERNAME_FIELD` as `username`.
+        user = authenticate(username=username, password=password)
 
         # If no user was found matching this email/password combination then
         # `authenticate` will return `None`. Raise an exception in this case.

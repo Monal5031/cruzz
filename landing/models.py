@@ -88,7 +88,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     country = models.CharField(max_length=50, null=True, blank=True)
 
     # The `USERNAME_FIELD` property tells us which field we will use to log in.
-    # In this case we want it to be the email field.
+    # In this case we want it to be the username field.
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
 

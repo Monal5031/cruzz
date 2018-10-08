@@ -53,7 +53,7 @@ class LoginAPIView(APIView):
         user = request.data.get('user', {})
 
         # Notice here that we do not call `serializer.save()` like we did for
-        # the registration endpoint. This is because we don't  have
+        # the registration endpoint. This is because we don't have
         # anything to save. Instead, the `validate` method on our serializer
         # handles everything we need.
         serializer = self.serializer_class(data=user)

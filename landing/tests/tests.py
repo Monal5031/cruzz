@@ -4,6 +4,7 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 
 from landing import views
+from landing.models import User
 
 
 class TestViewTest(TestCase):
@@ -44,9 +45,9 @@ class AuthAPITest(TestCase):
         new_user = {
             "user":
             {
-                # TODO 1 login with username
-                "email": "mohit@yadav.com",
-                "password": "peacepeace"
+                "username": "peace",
+                "password": "peacepeace",
+                "email": "mohit@yadav.com"
             }
         }
         view = views.LoginAPIView.as_view()
@@ -54,12 +55,11 @@ class AuthAPITest(TestCase):
         request = factory.post('/api/users/login/', json.dumps(new_user), content_type='application/json')
         response = view(request)
         response_email = response.data['email']
-        # TODO 2 login with username
-        # response_username = response.data['username']
+        response_username = response.data['username']
         response_code = response.status_code
         with self.subTest():
             self.assertEqual(response_email, new_user['user']['email'])
-        # with self.subTest():
-            # self.assertEqual(response_username, new_user['user']['username'])
+        with self.subTest():
+            self.assertEqual(response_username, new_user['user']['username'])
         with self.subTest():
             self.assertEqual(response_code, 200)
