@@ -14,28 +14,33 @@ class UserManager(BaseUserManager):
     Django requires that custom users define their own Manager class.
     """
 
-    def create_user(self, username, email, password=None):
+    def create_user(self, credentials):
         """Create and return a `User` with an email, username and password."""
-        if username is None:
+        if credentials['username'] is None:
             raise TypeError('Users must have a username.')
 
-        if email is None:
+        if credentials['email'] is None:
             raise TypeError('Users must have an email address.')
 
-        user = self.model(username=username, email=self.normalize_email(email))
-        user.set_password(password)
+        user = self.model(username=credentials['username'], email=self.normalize_email(credentials['email']))
+        user.set_password(credentials['password'])
+        user.first_name = credentials.get('first_name', None)
+        user.last_name = credentials.get('last_name', None)
+        user.city = credentials.get('city', None)
+        user.state = credentials.get('state', None)
+        user.country = credentials.get('country', None)
         user.save()
 
         return user
 
-    def create_superuser(self, username, email, password):
+    def create_superuser(self, credentials):
         """
         Create and return a `User` with superuser (admin) permissions.
         """
-        if password is None:
+        if credentials['password'] is None:
             raise TypeError('Superusers must have a password.')
 
-        user = self.create_user(username, email, password)
+        user = self.create_user(credentials)
         user.is_superuser = True
         user.is_staff = True
         user.save()
