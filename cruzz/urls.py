@@ -14,6 +14,6 @@ urlpatterns = [
     url('home', login_required(authentication.views.HomeView.as_view()), name='home'),
     path('admin/', admin.site.urls),
     path('', include('pwa.urls')),
-    url(r'^api/', include(('landing.urls', 'api-views'), namespace='api-views')),
+    url(r'^api/authentication/', include(('authentication.urls', 'api-authentication'), namespace='api-authentication')),
     url(r'^$', authentication.views.land, name='land'),
 ]
