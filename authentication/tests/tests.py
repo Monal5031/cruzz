@@ -54,7 +54,6 @@ class AuthAPITest(TestCase):
         request = factory.post('/api/authentication/users/login/', json.dumps(new_user), content_type='application/json')
         response = view(request)
         response_email = response.data['email']
-        print(response_email)
         response_username = response.data['username']
         response_code = response.status_code
         with self.subTest():
