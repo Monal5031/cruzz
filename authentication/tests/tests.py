@@ -3,8 +3,7 @@ import json
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 
-from landing import views
-from landing.models import User
+from authentication import views
 
 
 class TestViewTest(TestCase):

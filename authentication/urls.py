@@ -2,7 +2,7 @@
 from django.conf.urls import url
 
 # local django
-from landing.views import RegistrationAPIView, LoginAPIView, UserRetrieveUpdateAPIView
+from authentication.views import RegistrationAPIView, LoginAPIView, UserRetrieveUpdateAPIView
 
 
 urlpatterns = [

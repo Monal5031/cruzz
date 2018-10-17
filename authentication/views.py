@@ -8,8 +8,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # Local Django
-from landing.serializers import RegistrationSerializer, LoginSerializer, UserSerializer
-from landing.renderers import UserJSONRenderer
+from authentication.serializers import RegistrationSerializer, LoginSerializer, UserSerializer
+from authentication.renderers import UserJSONRenderer
 
 
 def land(request):

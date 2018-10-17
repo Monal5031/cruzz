@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'social_django',
     'pwa',
     'widget_tweaks',
-    'landing.apps.LandingConfig'
+    'authentication.apps.AuthenticationConfig'
 ]
 
 MIDDLEWARE = [
@@ -145,7 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'landing.User'
+AUTH_USER_MODEL = 'authentication.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
@@ -188,9 +188,9 @@ PWA_APP_ICONS = [
 django_heroku.settings(locals())
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'landing.exceptions.core_exception_handler',
+    'EXCEPTION_HANDLER': 'authentication.exceptions.core_exception_handler',
     'NON_FIELD_ERRORS_KEY': 'error',
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'landing.backends.JWTAuthentication',
+        'authentication.backends.JWTAuthentication',
     ),
 }
