@@ -28,7 +28,7 @@ class AuthAPITest(TestCase):
         }
         view = views.RegistrationAPIView.as_view()
         factory = APIRequestFactory()
-        request = factory.post('/api/users/registration/', json.dumps(new_user), content_type='application/json')
+        request = factory.post('/api/authentication/users/registration/', json.dumps(new_user), content_type='application/json')
         response = view(request)
         response_email = response.data['email']
         response_username = response.data['username']
@@ -51,7 +51,7 @@ class AuthAPITest(TestCase):
         }
         view = views.LoginAPIView.as_view()
         factory = APIRequestFactory()
-        request = factory.post('/api/users/login/', json.dumps(new_user), content_type='application/json')
+        request = factory.post('/api/authentication/users/login/', json.dumps(new_user), content_type='application/json')
         response = view(request)
         response_email = response.data['email']
         response_username = response.data['username']
