@@ -13,7 +13,7 @@ Auth type: Basic Auth
 
 URL:
 ```
-    http://127.0.0.1:8000/api/users/registration
+    http://127.0.0.1:8000/api/authentication/users/registration
 ```
 
 Body:
@@ -36,7 +36,7 @@ Auth type: Basic Auth
 
 URL:
 ```
-    http://127.0.0.1:8000/api/users/login
+    http://127.0.0.1:8000/api/authentication/users/login
 ```
 
 Body:
@@ -60,7 +60,7 @@ Auth Type: Bearer Token
 
 URL:
 ```
-    http://127.0.0.1:8000/api/users/update/
+    http://127.0.0.1:8000/api/authentication/users/update/
 ```
 
 Method: GET
