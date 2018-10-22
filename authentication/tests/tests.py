@@ -6,12 +6,6 @@ from rest_framework.test import APIRequestFactory
 from authentication import views
 
 
-class TestViewTest(TestCase):
-
-    def test_test_view(self):
-        self.assertEqual(views.test_func(), True)
-
-
 class AuthAPITest(TestCase):
 
     def test_register_login_update_user(self):
