@@ -21,11 +21,6 @@ class HomeView(View):
         return render(request, 'home.html')
 
 
-# only4 testing <3
-def test_func():
-    return True
-
-
 class RegistrationAPIView(APIView):
     # Allow any user (authenticated or not) to hit this endpoint.
     permission_classes = (AllowAny,)
@@ -76,7 +71,17 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        serializer_data = request.data.get('user', {})
+        user_data = request.data.get('user', {})
+
+        serializer_data = {
+            'username': user_data.get('username', request.user.username),
+            'email': user_data.get('email', request.user.email),
+
+            'profile': {
+                'bio': user_data.get('bio', request.user.profile.bio),
+                'imagae': user_data.get('image', request.user.profile.image)
+            }
+        }
 
         # Here is that serialize, validate, save pattern we talked about
         # before.
