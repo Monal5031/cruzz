@@ -7,90 +7,107 @@ Use the given URL as Postman's target URL.
 ### Login API
 1. Registration API
 
-Method: POST
+    URL:
+    ```
+        <server_url>/api/authentication/users/registration
+    ```
 
-Auth type: Basic Auth
-
-URL:
-```
-    http://127.0.0.1:8000/api/authentication/users/registration
-```
-
-Body:
-```json
-{
-  "user": {
-    "email": "test_email_here",
-    "username": "test_username_here",
-    "password": "test_password_here"
-  }
-}
-```
-
+    Method: POST
+    
+    Auth type: Basic Auth
+    
+    Body:
+    ```json
+    {
+      "user": {
+        "email": "test_email_here",
+        "username": "test_username_here",
+        "password": "test_password_here"
+      }
+    }
+    ```
 
 2. Login API
-
-Method: POST
-
-Auth type: Basic Auth
-
-URL:
-```
-    http://127.0.0.1:8000/api/authentication/users/login
-```
-
-Body:
-```json
-{
-  "user": {
-    "email": "test_email_here",
-    "username": "test_username_here",
-    "password": "test_password_here"
-  }
-}
-```
-or alternatively, use Bearer Token Auth and send the Token in header as in point 3.
-
+    
+    URL:
+    ```
+        <server_url>/api/authentication/users/login
+    ```
+    
+    Method: POST
+    
+    Auth type: Basic Auth
+    
+    Body:
+    ```json
+    {
+      "user": {
+        "email": "test_email_here",
+        "username": "test_username_here",
+        "password": "test_password_here"
+      }
+    }
+    ```
+    or alternatively, use Bearer Token Auth and send the Token in header as in point 3.
 
 3. Update user data API.
 
-Method: GET
+    URL:
+    ```
+        <server_url>/api/authentication/users/update/
+    ```
+        
+    -
+        Method: GET
+        
+        Auth Type: Bearer Token
+        
+        Header:
+        
+        | Key                | Value                   |
+        |:------------------:|:-----------------------:|
+        | Content-Type       | application/json        |
+        | Authorization      | Token token_value_here  |
+    
+    - 
+        Method: POST
+        
+        Auth Type: Bearer Token
+        
+        Header:
+        
+        | Key                | Value                   |
+        |:------------------:|:-----------------------:|
+        | Content-Type       | application/json        |
+        | Authorization      | Token token_value_here  |
+        
+        Body:
+        ```json
+        {
+          "user": {
+            "username": "username_here",
+            "email": "email_here",
+            "first_name": "first_name_here"
+          }
+        }
+        ```
 
-Auth Type: Bearer Token
+4. Retrieve Profile of registered user.
 
-URL:
-```
-    http://127.0.0.1:8000/api/authentication/users/update/
-```
-
-Method: GET
-
-Header:
-
-| Key                | Value                   |
-|:------------------:|:-----------------------:|
-| Content-Type       | application/json        |
-| Authorization      | Token token_value_here  |
-
-Method: POST
-
-Auth Type: Bearer Token
-
-Header:
-
-| Key                | Value                   |
-|:------------------:|:-----------------------:|
-| Content-Type       | application/json        |
-| Authorization      | Token token_value_here  |
-
-Body:
-
-```
-{
-  "user": {
-  	"username": "peace",
-  	"email": "mohit@yadav.com",
-  	"first_name": "mohit"
-  }
-}
-```
+    URL:
+    ```
+        <server_url>/api/profile/retrieve/<username>/
+    ```
+    
+    Method: GET
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+        
+    
