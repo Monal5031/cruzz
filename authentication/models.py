@@ -23,7 +23,6 @@ class UserManager(BaseUserManager):
 
         if credentials['email'] is None:
             raise TypeError('Users must have an email address.')
-
         user = self.model(username=credentials['username'], email=self.normalize_email(credentials['email']))
         user.set_password(credentials['password'])
         user.first_name = credentials.get('first_name', None)
