@@ -11,6 +11,7 @@ social-auth-app-django = "*"
 python-decouple = "*"
 django-widget-tweaks = "*"
 djangorestframework = "*"
+django-cors-headers="*"
 
 [requires]
 python_version = "3.6"

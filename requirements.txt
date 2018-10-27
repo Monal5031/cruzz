@@ -8,3 +8,4 @@ python-social-auth[django]
 python-decouple
 django-widget-tweaks
 djangorestframework
+django-cors-headers
