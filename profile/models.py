@@ -6,22 +6,45 @@ from core.models import TimestampedModel
 
 
 class Profile(TimestampedModel):
-    # There is an inherent relationship between the Profile and
-    # User models. By creating a one-to-one relationship between the two, we
-    # are formalizing this relationship. Every user will have one -- and only
-    # one -- related Profile model.
+    # User and profile relation
     user = models.OneToOneField(
         'authentication.User', on_delete=models.CASCADE
     )
 
-    # Each user profile will have a field where they can tell other users
-    # something about themselves. This field will be empty when the user
-    # creates their account, so we specify blank=True.
     bio = models.TextField(blank=True)
 
-    # In addition to the `bio` field, each user may have a profile image or
-    # avatar. This field is not required and it may be blank.
     image = models.URLField(blank=True)
 
+    follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False)
+    favorites = models.ManyToManyField('post.Post', related_name='favorited_by')
+
     def __str__(self):
-        return self.user.username
+        return str(self.user.username)
+
+    def follow(self, profile):
+        """Follow profile if we're not already following it."""
+        self.follows.add(profile)
+
+    def unfollow(self, profile):
+        """Unfollow profile if we're already following it."""
+        self.follows.remove(profile)
+
+    def is_following(self, profile):
+        """True is we're following else False"""
+        return self.follows.filter(pk=profile.pk).exists()
+
+    def is_followed_by(self, profile):
+        """True if profile is following us else False"""
+        return self.followed_by.filter(pk=profile.pk).exists()
+
+    def favorite(self, post):
+        """Favorite post if we haven't"""
+        self.favorites.add(post)
+
+    def unfavorite(self, post):
+        """Unfavorite if we have already"""
+        self.favorites.remove(post)
+
+    def has_favorited(self, post):
+        """True if favorited else False"""
+        return self.favorites.filter(pk=post.pk).exists()
