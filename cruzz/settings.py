@@ -43,9 +43,10 @@ INSTALLED_APPS = [
     'social_django',
     'pwa',
     'widget_tweaks',
-    'authentication.AuthenticationConfig',
-    'profile.apps.ProfileConfig',
-    'corsheaders'
+    'corsheaders',
+    'authentication',
+    'profile',
+    'post'
 ]
 
 MIDDLEWARE = [
@@ -201,7 +202,7 @@ PWA_APP_ICONS = [
 django_heroku.settings(locals())
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'authentication.exceptions.core_exception_handler',
+    'EXCEPTION_HANDLER': 'core.exceptions.core_exception_handler',
     'NON_FIELD_ERRORS_KEY': 'error',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'authentication.backends.JWTAuthentication',
