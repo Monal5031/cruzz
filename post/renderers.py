@@ -4,6 +4,7 @@ from core.renderers import VConnectJSONRenderer
 
 class PostJSONRenderer(VConnectJSONRenderer):
     object_label = 'post'
+    object_label_plural = 'posts'
     pagination_object_label = 'posts'
     pagination_count_label = 'postsCount'
 

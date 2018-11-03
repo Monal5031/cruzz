@@ -1,9 +1,11 @@
 # django
-from rest_framework import generics, mixins, status, viewsets
+from rest_framework import generics, mixins, status
 from rest_framework.exceptions import NotFound
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
 
 # local django
 from post.models import Post, Comment, Tag
@@ -11,7 +13,67 @@ from post.renderers import PostJSONRenderer, CommentJSONRenderer
 from post.serializers import PostSerializer, CommentSerializer, TagSerializer
 
 
-class PostViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class PostCreateView(mixins.CreateModelMixin, GenericAPIView):
+    lookup_field = 'slug'
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    renderer_classes = (PostJSONRenderer,)
+    serializer_class = PostSerializer
+
+    def post(self, request):
+        serializer_context = {
+            'author': request.user.username,
+            'request': request
+        }
+        serializer_data = request.data.get('post', {})
+        serializer = self.serializer_class(data=serializer_data, context=serializer_context)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class PostDisplayView(mixins.ListModelMixin, GenericAPIView):
+    lookup_field = 'slug'
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    queryset = Post.objects.select_related('author', 'author__user')
+    renderer_classes = (PostJSONRenderer,)
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        author = self.request.query_params.get('author', None)
+
+        if author is not None:
+            queryset = queryset.filter(author__user__username=author)
+
+        tag = self.request.query_params.get('tag', None)
+
+        if tag is not None:
+            queryset = queryset.filter(tags__tag=tag)
+
+        favorited_by = self.request.query_params.get('favorited', None)
+
+        if favorited_by is not None:
+            queryset = queryset.filter(favorited_by__user__username=favorited_by)
+
+        return queryset
+
+    def get(self, request):
+        serializer_context = {'request': request}
+        page = LimitOffsetPagination()
+        paginated_result = page.paginate_queryset(self.get_queryset(), request)
+
+        serializer = self.serializer_class(paginated_result, context=serializer_context, many=True)
+
+        new_data = {
+            'posts': serializer.data
+        }
+
+        return Response(new_data)
+
+
+class PostSingleView(mixins.RetrieveModelMixin, GenericAPIView):
     lookup_field = 'slug'
     queryset = Post.objects.select_related('author', 'author__user')
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -38,32 +100,11 @@ class PostViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Retriev
 
         return queryset
 
-    def create(self, request):
-        serializer_context = {
-            'author': request.user.profile,
-            'request': request
-        }
-        serializer_data = request.data.get('post', {})
-
-        serializer = self.serializer_class(data=serializer_data, context=serializer_context)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    def list(self, request):
-        serializer_context = {'request': request}
-        page = self.paginate_queryset(self.get_queryset())
-
-        serializer = self.serializer_class(page, context=serializer_context, many=True)
-
-        return self.get_paginated_response(serializer.data)
-
-    def retrieve(self, request, slug):
+    def get(self, request, post_slug=None):
         serializer_context = {'request': request}
 
         try:
-            serializer_instance = self.queryset.get(slug=slug)
+            serializer_instance = self.queryset.get(slug=post_slug)
         except Post.DoesNotExist:
             raise NotFound("A post with this slug does not exist.")
 
@@ -71,11 +112,39 @@ class PostViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, mixins.Retriev
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def update(self, request, slug):
+
+class PostUpdateView(mixins.RetrieveModelMixin, GenericAPIView):
+    lookup_field = 'slug'
+    queryset = Post.objects.select_related('author', 'author__user')
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    renderer_classes = (PostJSONRenderer,)
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        author = self.request.query_params.get('author', None)
+
+        if author is not None:
+            queryset = queryset.filter(author__user__username=author)
+
+        tag = self.request.query_params.get('tag', None)
+
+        if tag is not None:
+            queryset = queryset.filter(tags__tag=tag)
+
+        favorited_by = self.request.query_params.get('favorited', None)
+
+        if favorited_by is not None:
+            queryset = queryset.filter(favorited_by__user__username=favorited_by)
+
+        return queryset
+
+    def post(self, request, post_slug=None):
         serializer_context = {'request': request}
 
         try:
-            serializer_instance = self.queryset.get(slug=slug)
+            serializer_instance = self.queryset.get(slug=post_slug)
         except Post.DoesNotExist:
             raise NotFound("A post with this slug does not exist.")
 

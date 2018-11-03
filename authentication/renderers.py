@@ -5,6 +5,7 @@ from core.renderers import VConnectJSONRenderer
 
 class UserJSONRenderer(VConnectJSONRenderer):
     object_label = 'user'
+    object_label_plural = 'users'
 
     def render(self, data, media_type=None, renderer_context=None):
         # If we receive a `token` key in the response, it will be a
