@@ -11,9 +11,9 @@ router.register(r'posts', PostViewSet)
 
 urlpatterns = [
     url(r'^feed/?$', PostsFeedAPIView.as_view()),
-    url(r'^(?P<article_slug>[-\w]+)/favorite/?$', PostsFavoriteAPIView.as_view()),
-    url(r'^(?P<article_slug>[-\w]+)/comments/?$', CommentsListCreateAPIView.as_view()),
-    url(r'^(?P<article_slug>[-\w]+)/comments/(?P<comment_pk>[\d]+)/?$', CommentsDestroyAPIView.as_view()),
+    url(r'^(?P<post_slug>[-\w]+)/favorite/?$', PostsFavoriteAPIView.as_view()),
+    url(r'^(?P<post_slug>[-\w]+)/comments/?$', CommentsListCreateAPIView.as_view()),
+    url(r'^(?P<post_slug>[-\w]+)/comments/(?P<comment_pk>[\d]+)/?$', CommentsDestroyAPIView.as_view()),
     url(r'^tags/?$', TagListAPIView.as_view()),
     url(r'^$', include(router.urls)),
 ]

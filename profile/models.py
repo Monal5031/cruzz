@@ -14,6 +14,7 @@ class Profile(TimestampedModel):
     bio = models.TextField(blank=True)
 
     image = models.URLField(blank=True)
+    cover = models.URLField(blank=True, null=True)
 
     follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False)
     favorites = models.ManyToManyField('post.Post', related_name='favorited_by')
