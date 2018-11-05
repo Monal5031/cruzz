@@ -16,5 +16,6 @@ urlpatterns = [
     path('', include('pwa.urls')),
     url(r'^api/authentication/', include(('authentication.urls', 'api-authentication'), namespace='api-authentication')),
     url(r'^api/profile/', include(('profile.urls', 'api-profile'), namespace='api-profile')),
+    url(r'^api/post/', include(('post.urls', 'api-post'), namespace='api-post')),
     url(r'^$', authentication.views.land, name='land'),
 ]

@@ -1,7 +1,5 @@
 from rest_framework.views import exception_handler
 
-from authentication.exceptions import _handle_generic_error
-
 
 def core_exception_handler(exc, context):
     # If an exception is thrown that we don't explicitly handle here, we want
@@ -23,5 +21,29 @@ def core_exception_handler(exc, context):
         # return the response generated earlier by the default exception
         # handler.
         return handlers[exception_class](exc, context, response)
+
+    return response
+
+
+def _handle_generic_error(exc, context, response):
+    # the simplest exception handler
+    response.data = {'errors': response.data}
+
+    return response
+
+
+def _handle_not_found_error(exc, context, response):
+    view = context.get('view', None)
+
+    if view and hasattr(view, 'queryset') and view.queryset is not None:
+        error_key = view.queryset.model._meta.verbose_name
+
+        response.data = {
+            'errors': {
+                error_key: response.data['detail']
+            }
+        }
+    else:
+        response = _handle_generic_error(exc, context, response)
 
     return response
