@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # local django
+from authentication.serializers import UserUpdateSerializer
 from profile.models import Profile
 from profile.renderers import ProfileJSONRenderer
 from profile.serializers import ProfileSerializer
@@ -17,6 +18,7 @@ class ProfileRetrieveAPIView(RetrieveAPIView):
     queryset = Profile.objects.select_related('user')
     renderer_classes = (ProfileJSONRenderer,)
     serializer_class = ProfileSerializer
+    user_serializer_class = UserUpdateSerializer
 
     def get(self, request, *args, **kwargs):
         # Try to retrieve the requested profile and throw an exception if the
@@ -30,7 +32,14 @@ class ProfileRetrieveAPIView(RetrieveAPIView):
             'request': request
         })
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        user_serializer = self.user_serializer_class(request.user)
+        print(serializer.data)
+        new_data = {
+            'profile': serializer.data,
+            'user': user_serializer.data
+        }
+
+        return Response(new_data, status=status.HTTP_200_OK)
 
 
 class ProfileFollowAPIView(APIView):

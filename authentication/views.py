@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # Local Django
-from authentication.serializers import RegistrationSerializer, LoginSerializer, UserSerializer
+from authentication.serializers import RegistrationSerializer, LoginSerializer, UserUpdateSerializer
 from authentication.renderers import UserJSONRenderer
 
 
@@ -60,13 +60,14 @@ class LoginAPIView(APIView):
 class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
     renderer_classes = (UserJSONRenderer,)
-    serializer_class = UserSerializer
+    serializer_class = UserUpdateSerializer
 
     def get(self, request, *args, **kwargs):
         # There is nothing to validate or save here. Instead, we just want the
         # serializer to handle turning our `User` object into something that
         # can be JSONified and sent to the client.
         serializer = self.serializer_class(request.user)
+        print(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 

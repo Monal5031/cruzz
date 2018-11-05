@@ -3,7 +3,6 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 
 # Local Django
-from authentication.models import User
 from profile.serializers import ProfileSerializer
 from authentication.models import User
 
@@ -107,7 +106,7 @@ class LoginSerializer(serializers.Serializer):
         }
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserUpdateSerializer(serializers.ModelSerializer):
     """Handles serialization and deserialization of User objects."""
 
     # Passwords must be at least 8 characters, but no more than 128

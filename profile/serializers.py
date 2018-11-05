@@ -10,15 +10,22 @@ class ProfileSerializer(serializers.ModelSerializer):
     bio = serializers.CharField(allow_blank=True, required=False)
     image = serializers.SerializerMethodField()
     following = serializers.SerializerMethodField()
+    cover = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ('username', 'bio', 'image', 'following',)
+        fields = ('username', 'bio', 'image', 'following', 'cover', 'user')
         read_only_fields = ('username',)
 
     def get_image(self, obj):
         if obj.image:
             return obj.image
+
+        return 'https://thumb.ibb.co/eN5O0f/temp.jpg'
+
+    def get_cover(self, obj):
+        if obj.cover:
+            return obj.cover
 
         return 'https://thumb.ibb.co/eN5O0f/temp.jpg'
 
