@@ -74,18 +74,18 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         user_data = request.data.get('user', {})
 
         serializer_data = {
-            'first_name': user_data.get('first_name', None),
-            'last_name': user_data.get('last_name', None),
-            'city': user_data.get('city', None),
-            'state': user_data.get('state', None),
-            'country': user_data.get('country', None),
-            'username': user_data.get('username', request.user.username),
-            'email': user_data.get('email', request.user.email),
-            'is_staff': user_data.get('is_staff', None),
-            'is_superuser': user_data.get('is_staff', None),
-            'bio': user_data.get('bio', request.user.profile.bio or None),
-            'image': user_data.get('image', request.user.profile.image or None),
-            'cover': user_data.get('cover', request.user.profile.cover or None)
+            'first_name': user_data.get('first_name', None if request.user.first_name is None else request.user.first_name),
+            'last_name': user_data.get('last_name', None if request.user.last_name is None else request.user.last_name),
+            'city': user_data.get('city', None if request.user.city is None else request.user.city),
+            'state': user_data.get('state', None if request.user.state is None else request.user.state),
+            'country': user_data.get('country', None if request.user.country is None else request.user.country),
+            'username': user_data.get('username', None if request.user.username is None else request.user.username),
+            'email': user_data.get('email', None if request.user.email is None else request.user.email),
+            'is_staff': user_data.get('is_staff', None if request.user.is_staff is None else request.user.is_staff),
+            'is_superuser': user_data.get('is_superuser', None if request.user.is_superuser is None else request.user.is_superuser),
+            'bio': user_data.get('bio', None if request.user.profile.bio is None else request.user.profile.bio),
+            'image': user_data.get('image', None if request.user.profile.image is None else request.user.profile.image),
+            'cover': user_data.get('cover', None if request.user.profile.cover is None else request.user.profile.cover)
         }
 
         # Here is that serialize, validate, save pattern we talked about
