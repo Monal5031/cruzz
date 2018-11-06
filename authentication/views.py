@@ -67,7 +67,6 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         # serializer to handle turning our `User` object into something that
         # can be JSONified and sent to the client.
         serializer = self.serializer_class(request.user)
-        print(serializer.data)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 

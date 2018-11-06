@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate
 from rest_framework import serializers
 
 # Local Django
+from profile.models import Profile
 from profile.serializers import ProfileSerializer
 from authentication.models import User
 
@@ -185,13 +186,14 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         # the model. It's worth pointing out that `.set_password()` does not
         # save the model.
         instance.save()
+        profile = Profile.objects.get(user=instance)
 
         for (key, value) in profile_data.items():
             # We're doing the same thing as above, but this time we're making
             # changes to the Profile model.
-            setattr(instance.profile, key, value)
+            setattr(profile, key, value)
 
         # Save the profile just like we saved the user.
-        instance.save()
+        profile.save()
 
         return instance
