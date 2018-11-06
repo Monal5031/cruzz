@@ -56,8 +56,8 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
 
     # The `is_staff` flag is expected by Django to determine who can and cannot
     # log into the Django admin site.
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
+    is_staff = models.NullBooleanField(default=False)
+    is_superuser = models.NullBooleanField(default=False)
 
     first_name = models.CharField(max_length=20, null=True, blank=True)
     last_name = models.CharField(max_length=20, null=True, blank=True)
