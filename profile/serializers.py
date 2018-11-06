@@ -6,11 +6,12 @@ from profile.models import Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='user.username')
+    username = serializers.CharField(source='user.username', required=False)
     bio = serializers.CharField(allow_blank=True, required=False)
     image = serializers.SerializerMethodField()
     following = serializers.SerializerMethodField()
     cover = serializers.SerializerMethodField()
+    user = serializers.SerializerMethodField(required=False)
 
     class Meta:
         model = Profile
@@ -42,3 +43,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         followee = instance
 
         return follower.is_following(followee)
+
+    def get_user(self, obj):
+        print(obj)
