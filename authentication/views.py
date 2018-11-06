@@ -84,11 +84,8 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
             'email': user_data.get('email', request.user.email),
             'is_staff': user_data.get('is_staff', None),
             'is_superuser': user_data.get('is_staff', None),
-
-            'profile': {
-                'bio': user_data.get('bio', request.user.profile.bio),
-                'image': user_data.get('image', request.user.profile.image)
-            }
+            'bio': user_data.get('bio', request.user.profile.bio or None),
+            'image': user_data.get('image', request.user.profile.image or None)
         }
 
         # Here is that serialize, validate, save pattern we talked about

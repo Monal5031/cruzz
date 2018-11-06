@@ -127,13 +127,14 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     # We want to get the `bio` and `image` fields from the related Profile
     # model.
-    bio = serializers.CharField(source='profile.bio', read_only=True)
-    image = serializers.CharField(source='profile.image', read_only=True)
-    first_name = serializers.CharField(max_length=20, required=False, allow_null=True)
-    last_name = serializers.CharField(max_length=20, required=False, allow_null=True)
-    city = serializers.CharField(max_length=50, required=False, allow_null=True)
-    state = serializers.CharField(max_length=50, required=False, allow_null=True)
-    country = serializers.CharField(max_length=50, required=False, allow_null=True)
+    bio = serializers.CharField(source='profile.bio', required=False, allow_null=True, allow_blank=True)
+    image = serializers.CharField(source='profile.image', required=False, allow_null=True, allow_blank=True)
+    cover = serializers.CharField(source='profile.cover', required=False, allow_null=True, allow_blank=True)
+    first_name = serializers.CharField(max_length=20, required=False, allow_null=True, allow_blank=True)
+    last_name = serializers.CharField(max_length=20, required=False, allow_null=True, allow_blank=True)
+    city = serializers.CharField(max_length=50, required=False, allow_null=True, allow_blank=True)
+    state = serializers.CharField(max_length=50, required=False, allow_null=True, allow_blank=True)
+    country = serializers.CharField(max_length=50, required=False, allow_null=True, allow_blank=True)
 
     is_superuser = serializers.NullBooleanField(write_only=True)
     is_staff = serializers.NullBooleanField(write_only=True)
@@ -144,7 +145,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'email', 'username', 'password',
             'token', 'first_name', 'last_name',
             'profile', 'bio', 'image', 'city', 'state', 'country',
-            'is_staff', 'is_superuser'
+            'is_staff', 'is_superuser', 'cover'
         )
 
         # The `read_only_fields` option is an alternative for explicitly

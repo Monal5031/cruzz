@@ -11,9 +11,9 @@ class Profile(TimestampedModel):
         'authentication.User', on_delete=models.CASCADE
     )
 
-    bio = models.TextField(blank=True)
+    bio = models.TextField(blank=True, null=True)
 
-    image = models.URLField(blank=True)
+    image = models.URLField(blank=True, null=True)
     cover = models.URLField(blank=True, null=True)
 
     follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False)
