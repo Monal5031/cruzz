@@ -116,25 +116,35 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         max_length=128,
         min_length=8,
-        write_only=True
+        write_only=True,
+        required=False
     )
 
     # When a field should be handled as a serializer, we must explicitly say
     # so. Moreover, `UserSerializer` should never expose profile information,
     # so we set `write_only=True`.
-    profile = ProfileSerializer(write_only=True)
+    profile = ProfileSerializer(write_only=True, required=False)
 
     # We want to get the `bio` and `image` fields from the related Profile
     # model.
     bio = serializers.CharField(source='profile.bio', read_only=True)
     image = serializers.CharField(source='profile.image', read_only=True)
+    first_name = serializers.CharField(max_length=20, required=False, allow_null=True)
+    last_name = serializers.CharField(max_length=20, required=False, allow_null=True)
+    city = serializers.CharField(max_length=50, required=False, allow_null=True)
+    state = serializers.CharField(max_length=50, required=False, allow_null=True)
+    country = serializers.CharField(max_length=50, required=False, allow_null=True)
+
+    is_superuser = serializers.NullBooleanField(write_only=True)
+    is_staff = serializers.NullBooleanField(write_only=True)
 
     class Meta:
         model = User
         fields = (
             'email', 'username', 'password',
             'token', 'first_name', 'last_name',
-            'profile', 'bio', 'image',
+            'profile', 'bio', 'image', 'city', 'state', 'country',
+            'is_staff', 'is_superuser'
         )
 
         # The `read_only_fields` option is an alternative for explicitly

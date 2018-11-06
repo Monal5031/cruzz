@@ -75,19 +75,26 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         user_data = request.data.get('user', {})
 
         serializer_data = {
+            'first_name': user_data.get('first_name', None),
+            'last_name': user_data.get('last_name', None),
+            'city': user_data.get('city', None),
+            'state': user_data.get('state', None),
+            'country': user_data.get('country', None),
             'username': user_data.get('username', request.user.username),
             'email': user_data.get('email', request.user.email),
+            'is_staff': user_data.get('is_staff', None),
+            'is_superuser': user_data.get('is_staff', None),
 
             'profile': {
                 'bio': user_data.get('bio', request.user.profile.bio),
-                'imagae': user_data.get('image', request.user.profile.image)
+                'image': user_data.get('image', request.user.profile.image)
             }
         }
 
         # Here is that serialize, validate, save pattern we talked about
         # before.
         serializer = self.serializer_class(
-            request.user, data=serializer_data, partial=True
+            request.user, data=serializer_data
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
