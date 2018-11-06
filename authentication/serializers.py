@@ -191,6 +191,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         for (key, value) in profile_data.items():
             # We're doing the same thing as above, but this time we're making
             # changes to the Profile model.
+            print(key, value)
             setattr(profile, key, value)
 
         # Save the profile just like we saved the user.
