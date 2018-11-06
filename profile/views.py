@@ -33,7 +33,6 @@ class ProfileRetrieveAPIView(RetrieveAPIView):
         })
 
         user_serializer = self.user_serializer_class(request.user)
-        print(serializer.data)
         new_data = {
             'profile': serializer.data,
             'user': user_serializer.data
