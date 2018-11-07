@@ -10,8 +10,10 @@ from post.relations import TagRelatedField
 
 class PostSerializer(serializers.ModelSerializer):
     author = ProfileSerializer(read_only=True)
+    body = serializers.CharField(required=True)
     description = serializers.CharField(required=False)
     slug = serializers.SlugField(required=False)
+    title = serializers.CharField(required=True)
 
     favorited = serializers.SerializerMethodField()
     favoritesCount = serializers.SerializerMethodField(method_name='get_favorites_count')

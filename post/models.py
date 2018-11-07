@@ -9,7 +9,7 @@ class Post(TimestampedModel):
     slug = models.SlugField(db_index=True, max_length=255, unique=True)
     title = models.CharField(db_index=True, max_length=255)
 
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     body = models.TextField()
 
     # every post must have an author
