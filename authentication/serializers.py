@@ -27,7 +27,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
     city = serializers.CharField(max_length=50, required=False)
     state = serializers.CharField(max_length=50, required=False)
     country = serializers.CharField(max_length=50, required=False)
-    is_superuser = serializers.BooleanField(default=False, required=False)
+    is_superuser = serializers.NullBooleanField(default=False, required=False)
+    is_staff = serializers.NullBooleanField(default=False, required=False)
 
     class Meta:
         model = User
@@ -36,12 +37,12 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = [
             'email', 'username', 'password',
             'token', 'first_name', 'last_name',
-            'city', 'state', 'country', 'is_superuser'
+            'city', 'state', 'country', 'is_superuser', 'is_staff'
         ]
 
     def create(self, validated_data):
         # Use the `create_user` method we wrote earlier to create a new user.
-        if validated_data['is_superuser']:
+        if validated_data['is_superuser'] or validated_data['is_staff']:
             return User.objects.create_superuser(validated_data)
         return User.objects.create_user(validated_data)
 
