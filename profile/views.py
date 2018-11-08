@@ -126,13 +126,16 @@ class ProfileFollowersAPIView(mixins.ListModelMixin, GenericAPIView):
         except User.DoesNotExist:
             raise NotFound('User with this username was not found.')
 
-        profile = Profile.objects.get(user=user)
-        ids_of_followers = list()
-        for profiler in Profile.objects.all():
-            if profile in profiler.follows.all() and profile is not profiler:
-                ids_of_followers.append(profiler.pk)
+        query_set = Profile.objects.all()
+        query_set = query_set.filter(follows__user__username=user.username)
 
-        return Profile.objects.filter(id__in=ids_of_followers)
+        # profile = Profile.objects.get(user=user)
+        # ids_of_followers = list()
+        # for profiler in Profile.objects.all():
+        #     if profile in profiler.follows.all() and profile is not profiler:
+        #         ids_of_followers.append(profiler.pk)
+
+        return query_set
 
     def get(self, request):
         serializer_context = {'request': request}
@@ -140,6 +143,32 @@ class ProfileFollowersAPIView(mixins.ListModelMixin, GenericAPIView):
         paginated_result = page.paginate_queryset(self.get_queryset(), request)
 
         serializer = self.serializer_class(paginated_result, context=serializer_context, many=True)
+
+        new_data = {
+            'profiles': serializer.data
+        }
+
+        return Response(new_data)
+
+
+class PageSuggestionAPIView(mixins.ListModelMixin, GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (ProfileJSONRenderer,)
+    serializer_class = ProfileSerializer
+
+    def get_queryset(self, user):
+
+        profile = Profile.objects.get(user=user)
+
+        query_set = profile.follows.all()
+        query_set = Profile.objects.exclude(pk__in=query_set.values_list('pk', flat=True))
+        query_set = query_set.filter(user__official_page=True)
+
+        return query_set
+
+    def get(self, request):
+        serializer_context = {'request': request}
+        serializer = self.serializer_class(self.get_queryset(request.user), context=serializer_context, many=True)
 
         new_data = {
             'profiles': serializer.data
