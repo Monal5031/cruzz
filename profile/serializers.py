@@ -11,10 +11,16 @@ class ProfileSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     following = serializers.SerializerMethodField()
     cover = serializers.SerializerMethodField()
+    first_name = serializers.SerializerMethodField(required=False, allow_null=True)
+    last_name = serializers.SerializerMethodField(required=False, allow_null=True)
+    city = serializers.SerializerMethodField(required=False, allow_null=True)
+    state = serializers.SerializerMethodField(required=False, allow_null=True)
+    country = serializers.SerializerMethodField(required=False, allow_null=True)
 
     class Meta:
         model = Profile
-        fields = ('username', 'bio', 'image', 'following', 'cover')
+        fields = ('username', 'bio', 'image', 'following', 'cover',
+                  'first_name', 'last_name', 'city', 'state', 'country')
         read_only_fields = ('username',)
 
     def get_image(self, obj):
@@ -42,3 +48,18 @@ class ProfileSerializer(serializers.ModelSerializer):
         followee = instance
 
         return follower.is_following(followee)
+
+    def get_first_name(self, obj):
+        return obj.user.first_name
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
+
+    def get_city(self, obj):
+        return obj.user.city
+
+    def get_state(self, obj):
+        return obj.user.state
+
+    def get_country(self, obj):
+        return obj.user.country

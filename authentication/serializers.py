@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 # Local Django
 from profile.models import Profile
-from profile.serializers import ProfileSerializer
+import profile.serializers as ps
 from authentication.models import User
 
 
@@ -125,7 +125,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     # When a field should be handled as a serializer, we must explicitly say
     # so. Moreover, `UserSerializer` should never expose profile information,
     # so we set `write_only=True`.
-    profile = ProfileSerializer(write_only=True, required=False)
+    profile = ps.ProfileSerializer(write_only=True, required=False)
 
     # We want to get the `bio` and `image` fields from the related Profile
     # model.
