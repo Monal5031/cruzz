@@ -1,12 +1,14 @@
 # django
-from rest_framework import serializers, status
+from rest_framework import serializers, status, mixins
 from rest_framework.exceptions import NotFound
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveAPIView, GenericAPIView
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # local django
+from authentication.models import User
 from authentication.serializers import UserUpdateSerializer
 from profile.models import Profile
 from profile.renderers import ProfileJSONRenderer
@@ -68,7 +70,7 @@ class ProfileFollowAPIView(APIView):
         try:
             followee = Profile.objects.get(user__username=username)
         except Profile.DoesNotExist:
-            raise NotFound(' A profile with this username was not found.')
+            raise NotFound('A profile with this username was not found.')
 
         if follower.pk is followee.pk:
             raise serializers.ValidationError('You can\'t follow yourself')
@@ -80,3 +82,33 @@ class ProfileFollowAPIView(APIView):
         })
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ProfileFollowingAPIView(mixins.ListModelMixin, GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (ProfileJSONRenderer,)
+    serializer_class = ProfileSerializer
+
+    def get_queryset(self):
+        user = self.request.query_params.get('user', None)
+        try:
+            user = User.objects.get(username=user)
+        except User.DoesNotExist:
+            raise NotFound('User with this username was not found.')
+
+        profile = Profile.objects.get(user=user)
+
+        return profile.follows.all()
+
+    def get(self, request):
+        serializer_context = {'request': request}
+        page = LimitOffsetPagination()
+        paginated_result = page.paginate_queryset(self.get_queryset(), request)
+
+        serializer = self.serializer_class(paginated_result, context=serializer_context, many=True)
+
+        new_data = {
+            'profiles': serializer.data
+        }
+
+        return Response(new_data)
