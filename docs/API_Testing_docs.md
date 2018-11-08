@@ -446,7 +446,7 @@ Use the given URL as Postman's target URL.
     }
     ```
 
-2. Retrieve all posts
+2. Retrieve all posts by author
 
     #### Request
     
@@ -588,7 +588,47 @@ Use the given URL as Postman's target URL.
         }
     }
     ```
+
+5. Retrieve all posts by following of users
+
+    #### Request
     
+    URL:
+    ```
+        <server_url>/api/post/feed/?limit=N&offset=M
+        
+    ```
+    N = number of posts to fetch.
+    
+    M = number of posts to send from fetched.
+    
+    Method: GET
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    ```json
+    {
+        "posts": [
+           {
+             // First post
+           },
+           {
+             // Second post
+           }
+        ] 
+    }
+    ```
+
+
 ### Page API
 
 1. Retrieve page suggestions whom user is not following.

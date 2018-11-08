@@ -255,7 +255,7 @@ class TagListAPIView(generics.ListAPIView):
         return Response({'tags': serializer.data}, status=status.HTTP_200_OK)
 
 
-class PostsFeedAPIView(generics.ListAPIView):
+class PostsFeedAPIView(mixins.ListModelMixin, GenericAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Post.objects.all()
     renderer_classes = (PostJSONRenderer,)
@@ -266,11 +266,15 @@ class PostsFeedAPIView(generics.ListAPIView):
             author__in=self.request.user.profile.follows.all()
         )
 
-    def list(self, request):
-        queryset = self.get_queryset()
-        page = self.paginate_queryset(queryset)
-
+    def get(self, request):
         serializer_context = {'request': request}
-        serializer = self.serializer_class(page, context=serializer_context, many=True)
+        page = LimitOffsetPagination()
+        paginated_result = page.paginate_queryset(self.get_queryset(), request)
 
-        return self.get_paginated_response(serializer.data)
+        serializer = self.serializer_class(paginated_result, context=serializer_context, many=True)
+
+        new_data = {
+            'posts': serializer.data
+        }
+
+        return Response(new_data)
