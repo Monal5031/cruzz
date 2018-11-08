@@ -588,3 +588,41 @@ Use the given URL as Postman's target URL.
         }
     }
     ```
+    
+### Page API
+
+1. Retrieve page suggestions whom user is not following.
+
+    #### Request
+    
+    URL:
+    ```
+        <server_url>/api/profile/discover/pages
+        
+    ```
+    
+    Method: GET
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    ```json
+    {
+        "profiles": [
+           {
+             // First profile
+           },
+           {
+             // Second profile
+           }
+        ] 
+    }
+    ```
