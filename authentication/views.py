@@ -85,7 +85,8 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
             'is_superuser': user_data.get('is_superuser', None if request.user.is_superuser is None else request.user.is_superuser),
             'bio': user_data.get('bio', None if request.user.profile.bio is None else request.user.profile.bio),
             'image': user_data.get('image', None if request.user.profile.image is None else request.user.profile.image),
-            'cover': user_data.get('cover', None if request.user.profile.cover is None else request.user.profile.cover)
+            'cover': user_data.get('cover', None if request.user.profile.cover is None else request.user.profile.cover),
+            'official_page': user_data.get('official_page', None if request.user.official_page is None else request.user.official_page)
         }
 
         # Here is that serialize, validate, save pattern we talked about

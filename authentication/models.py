@@ -65,6 +65,9 @@ class User(AbstractBaseUser, PermissionsMixin, TimestampedModel):
     state = models.CharField(max_length=50, null=True, blank=True)
     country = models.CharField(max_length=50, null=True, blank=True)
 
+    # If a user is an official page or not
+    official_page = models.NullBooleanField(default=False, null=True)
+
     # The `USERNAME_FIELD` property tells us which field we will use to log in.
     # In this case we want it to be the username field.
     USERNAME_FIELD = 'username'

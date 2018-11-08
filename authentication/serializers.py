@@ -140,6 +140,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     is_superuser = serializers.NullBooleanField(write_only=True)
     is_staff = serializers.NullBooleanField(write_only=True)
+    official_page = serializers.NullBooleanField(required=False, default=False)
 
     class Meta:
         model = User
@@ -147,7 +148,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'email', 'username', 'password',
             'token', 'first_name', 'last_name',
             'profile', 'bio', 'image', 'city', 'state', 'country',
-            'is_staff', 'is_superuser', 'cover'
+            'is_staff', 'is_superuser', 'cover', 'official_page'
         )
 
         # The `read_only_fields` option is an alternative for explicitly

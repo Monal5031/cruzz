@@ -16,11 +16,13 @@ class ProfileSerializer(serializers.ModelSerializer):
     city = serializers.SerializerMethodField(required=False, allow_null=True)
     state = serializers.SerializerMethodField(required=False, allow_null=True)
     country = serializers.SerializerMethodField(required=False, allow_null=True)
+    official_page = serializers.SerializerMethodField(required=False, allow_null=True)
 
     class Meta:
         model = Profile
         fields = ('username', 'bio', 'image', 'following', 'cover',
-                  'first_name', 'last_name', 'city', 'state', 'country')
+                  'first_name', 'last_name', 'city', 'state', 'country',
+                  'official_page')
         read_only_fields = ('username',)
 
     def get_image(self, obj):
@@ -63,3 +65,6 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_country(self, obj):
         return obj.user.country
+
+    def get_official_page(self, obj):
+        return  obj.user.official_page
