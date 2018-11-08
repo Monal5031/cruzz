@@ -112,3 +112,37 @@ class ProfileFollowingAPIView(mixins.ListModelMixin, GenericAPIView):
         }
 
         return Response(new_data)
+
+
+class ProfileFollowersAPIView(mixins.ListModelMixin, GenericAPIView):
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (ProfileJSONRenderer,)
+    serializer_class = ProfileSerializer
+
+    def get_queryset(self):
+        user = self.request.query_params.get('user', None)
+        try:
+            user = User.objects.get(username=user)
+        except User.DoesNotExist:
+            raise NotFound('User with this username was not found.')
+
+        profile = Profile.objects.get(user=user)
+        ids_of_followers = list()
+        for profiler in Profile.objects.all():
+            if profile in profiler.follows.all() and profile is not profiler:
+                ids_of_followers.append(profiler.pk)
+
+        return Profile.objects.filter(id__in=ids_of_followers)
+
+    def get(self, request):
+        serializer_context = {'request': request}
+        page = LimitOffsetPagination()
+        paginated_result = page.paginate_queryset(self.get_queryset(), request)
+
+        serializer = self.serializer_class(paginated_result, context=serializer_context, many=True)
+
+        new_data = {
+            'profiles': serializer.data
+        }
+
+        return Response(new_data)

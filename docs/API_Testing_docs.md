@@ -288,13 +288,64 @@ Use the given URL as Postman's target URL.
     
     URL:
     ```
-        <server_url>/api/profile/following/user=A&limit=N&offset=M
+        <server_url>/api/profile/following/?user=A&limit=N&offset=M
     ```
     N = Limit the number of profile to fetch
     
     M = offset of the profiles to send
     
     A = username of profile whose following to retrieve
+    
+    Method: GET
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    Body:
+    ```json
+    {
+       // Nothing required but as a security backup send username and password
+       "user": {
+         "username": "requesting_users_username_here",
+         "password": "password_here"
+       } 
+    }
+    ```
+    
+    #### Response
+    
+    ```json
+    {
+        "profiles": [
+           {
+             // First profile
+           },
+           {
+             // Second profile
+           }
+        ] 
+    }
+    ```
+
+5. Retrieve all profiles of followers of user
+
+    #### Request
+    
+    URL:
+    ```
+        <server_url>/api/profile/followers/?user=A&limit=N&offset=M
+    ```
+    N = Limit the number of profile to fetch
+    
+    M = offset of the profiles to send
+    
+    A = username of profile whose followers to retrieve
     
     Method: GET
     
