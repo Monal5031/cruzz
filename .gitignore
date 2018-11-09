@@ -6,3 +6,4 @@ db.sqlite3
 .idea/
 venv/
 .env_prod
+.coverage
