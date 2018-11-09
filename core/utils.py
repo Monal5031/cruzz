@@ -58,8 +58,6 @@ def create_custom_user(user_data):
         email=user_data['email'],
         password=user_data['password'],
         is_active=user_data['is_active'],
-        is_staff=user_data['is_staff'],
-        is_superuser=user_data['is_superuser'],
         first_name=user_data['first_name'],
         last_name=user_data['last_name'],
         city=user_data['city'],

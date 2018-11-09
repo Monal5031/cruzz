@@ -1,4 +1,5 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.core.exceptions import ValidationError
 from rest_framework.test import APIRequestFactory
 
 from core.utils import create_valid_user, create_invalid_user, create_custom_user, create_superuser
@@ -37,7 +38,9 @@ class AuthenticationTests(StaticLiveServerTestCase):
             'last_name': 'test_last_name',
             'city': 'Gandhinagar',
             'state': 'Gujarat',
-            'country': 'India'
+            'country': 'India',
+            'official_page': False,
+            'is_active': True
         }
         test_user = create_custom_user(test_user_data)
         self.assertEqual(test_user_data['username'], test_user.username)
@@ -52,16 +55,18 @@ class AuthenticationTests(StaticLiveServerTestCase):
     def test_create_new_invalid_user(self):
         test_user_data = {
             'username': 'test',
-            'email': 'test@test.com',
+            'email': '',
             'password': 'test12345',
             'first_name': 'test_first_name',
             'last_name': 'test_last_name',
             'city': 'Gandhinagar',
             'state': 'Gujarat',
-            'country': 'India'
+            'country': 'India',
+            'official_page': False,
+            'is_active': True
         }
         test_user = create_custom_user(test_user_data)
-        test_user.full_clean()
+        self.assertRaisesRegexp(ValidationError, 'This field cannot be blank', test_user.full_clean)
 
     # def test_login_with_correct_credentials(self):
     #     pass
