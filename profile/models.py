@@ -18,6 +18,8 @@ class Profile(TimestampedModel):
 
     follows = models.ManyToManyField('self', related_name='followed_by', symmetrical=False)
     favorites = models.ManyToManyField('post.Post', related_name='favorited_by')
+    upvotes = models.ManyToManyField('post.Post', related_name='upvoted_by')
+    downvotes = models.ManyToManyField('post.Post', related_name='downvoted_by')
 
     def __str__(self):
         return str(self.user.username)
@@ -49,3 +51,33 @@ class Profile(TimestampedModel):
     def has_favorited(self, post):
         """True if favorited else False"""
         return self.favorites.filter(pk=post.pk).exists()
+
+    def upvote(self, post):
+        """ Upvote if we haven't and remove from downvote"""
+        self.upvotes.add(post)
+        self.downvotes.remove(post)
+
+    def downvote(self, post):
+        """ downvote if we haven't and remove from upvote"""
+        self.downvotes.add(post)
+        self.upvotes.remove(post)
+
+    def has_upvoted(self, post):
+        """True if upvoted else False"""
+        return self.upvotes.filter(pk=post.pk).exists()
+
+    def has_downvoted(self, post):
+        """True if downvoted else False"""
+        return self.downvotes.filter(pk=post.pk).exists()
+
+    def get_favorites(self):
+        """Get all the posts favorited by user"""
+        return self.favorites.all()
+
+    def get_upvotes(self):
+        """Get all the posts upvoted by user"""
+        return self.upvotes.all()
+
+    def get_downvotes(self):
+        """Get all the posts downvoted by user"""
+        return self.downvotes.all()

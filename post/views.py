@@ -363,3 +363,39 @@ class PostsFeedAPIView(mixins.ListModelMixin, GenericAPIView):
         }
 
         return Response(new_data)
+
+
+class PostsVoteAPIView(APIView):
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (PostJSONRenderer,)
+    serializer_class = PostSerializer
+
+    def delete(self, request, post_slug=None):
+        profile = self.request.user.profile
+        serializer_context = {'request': request}
+
+        try:
+            post = Post.objects.get(slug=post_slug)
+        except Post.DoesNotExist:
+            raise NotFound("A post with this slug was not found.")
+
+        profile.downvote(post)
+
+        serializer = self.serializer_class(post, context=serializer_context)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def get(self, request, post_slug=None):
+        profile = self.request.user.profile
+        serializer_context = {'request': request}
+
+        try:
+            post = Post.objects.get(slug=post_slug)
+        except Post.DoesNotExist:
+            raise NotFound("A post with this slug was not found.")
+
+        profile.upvote(post)
+
+        serializer = self.serializer_class(post, context=serializer_context)
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

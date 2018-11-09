@@ -18,6 +18,12 @@ class PostSerializer(serializers.ModelSerializer):
     favorited = serializers.SerializerMethodField()
     favoritesCount = serializers.SerializerMethodField(method_name='get_favorites_count')
 
+    upvoted = serializers.SerializerMethodField()
+    upvotesCount = serializers.SerializerMethodField(method_name='get_upvotes_count')
+
+    downvoted = serializers.SerializerMethodField()
+    downvotesCount = serializers.SerializerMethodField(method_name='get_downvotes_count')
+
     tagList = TagRelatedField(many=True, required=False, source='tags')
 
     # define methods for these fields
@@ -29,7 +35,8 @@ class PostSerializer(serializers.ModelSerializer):
         fields = (
             'author', 'body', 'createdAt',
             'description', 'favorited', 'favoritesCount',
-            'slug', 'tagList', 'title', 'updatedAt'
+            'slug', 'tagList', 'title', 'updatedAt',
+            'upvoted', 'upvotesCount', 'downvoted', 'downvotesCount'
         )
 
     def create(self, validated_data):
@@ -60,6 +67,34 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_favorites_count(self, instance):
         return instance.favorited_by.count()
+
+    def get_upvoted(self, instance):
+        request = self.context.get('request', None)
+
+        if request is None:
+            return False
+
+        if not request.user.is_authenticated:
+            return False
+
+        return request.user.profile.has_upvoted(instance)
+
+    def get_upvotes_count(self, instance):
+        return instance.upvoted_by.count()
+
+    def get_downvoted(self, instance):
+        request = self.context.get('request', None)
+
+        if request is None:
+            return False
+
+        if not request.user.is_authenticated:
+            return False
+
+        return request.user.profile.has_downvoted(instance)
+
+    def get_downvotes_count(self, instance):
+        return instance.downvoted_by.count()
 
     def get_updated_at(self, instance):
         return instance.updated_at.isoformat()

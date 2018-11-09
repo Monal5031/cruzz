@@ -705,7 +705,71 @@ Use the given URL as Postman's target URL.
             "author": {
                 // author data
             },
-        "favorited": false
+        "favorited": false,
+        "favoritesCount": int count
+        // post data
+        }
+    }
+    ```
+
+8. Upvote a post
+
+    #### Request
+    
+    URL:
+    ```
+        <server_url>/api/post/<post_slug>/vote/
+        
+    ```
+    
+    Method: GET
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    ```json
+    {
+        "post": {
+            "author": {
+                // author data
+            },
+         "upvoted": true,
+         "upvotesCount": int count
+         // post data
+        }
+    }
+    ```
+9. Downvote a post
+    
+    Method: DELETE
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    ```json
+    {
+        "post": {
+            "author": {
+                // author data
+            },
+        "downvoted": true,
+        "downvotesCount": int count
         // post data
         }
     }
