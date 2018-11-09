@@ -123,14 +123,15 @@ def create_profile(data=None):
 
 
 def create_post():
+    profile = create_profile()
     post = Post.objects.create(
         slug=None,
         title=generate_random_string(size=10),
         description=generate_random_string(size=50),
         body=generate_random_string(size=40),
-        author=create_profile(),
-        tags=create_tag()
+        author=profile,
     )
+    post.tags.add(create_tag())
 
     post.save()
     return post
@@ -143,8 +144,8 @@ def create_custom_post(post_data):
         description=post_data['description'],
         body=post_data['body'],
         author=create_profile(post_data['author']),
-        tags=create_tag()
     )
+    post.tags.add(create_tag())
 
     post.save()
     return post
@@ -164,8 +165,8 @@ def create_comment():
 def create_custom_comment(comment_data):
     comment = Comment.objects.create(
         body=comment_data['body'],
-        post=create_custom_post(comment_data['post']),
-        author=create_profile(comment_data['author'])
+        post=comment_data['post'],
+        author=comment_data['author']
     )
 
     comment.save()
@@ -174,7 +175,8 @@ def create_custom_comment(comment_data):
 
 def create_tag():
     tags = Tag.objects.create(
-        tag=generate_random_string(size=7)
+        tag=generate_random_string(size=7),
+        slug=generate_random_string(size=7)
     )
 
     tags.save()
@@ -185,5 +187,4 @@ def create_custom_tags(tags=None):
     ret_val = []
     for tag in tags:
         ret_val.append(Tag.objects.create(tag=tag, slug=tag))
-    # return [Tag.objects.create(tag=tag).save() for tag in tags]
     return ret_val
