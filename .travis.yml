@@ -32,8 +32,8 @@ before_script:
   - psql -c "GRANT ALL ON DATABASE cruzz_db TO cruzz;" -U postgres
 
 script:
-  - cd src/
   - python manage.py makemigrations
   - python manage.py migrate
+  - python manage.py test -v 2
   - coverage run --source='.' manage.py test
   - coverage report -m
