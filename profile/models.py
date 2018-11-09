@@ -53,14 +53,20 @@ class Profile(TimestampedModel):
         return self.favorites.filter(pk=post.pk).exists()
 
     def upvote(self, post):
-        """ Upvote if we haven't and remove from downvote"""
+        """ Upvote if we haven't"""
         self.upvotes.add(post)
-        self.downvotes.remove(post)
+
+    def remove_upvote(self, post):
+        """Remove upvote if we have already"""
+        self.upvotes.remove(post)
 
     def downvote(self, post):
         """ downvote if we haven't and remove from upvote"""
         self.downvotes.add(post)
-        self.upvotes.remove(post)
+
+    def remove_downvote(self, post):
+        """ Remove downvote if we have already"""
+        self.downvotes.remove(post)
 
     def has_upvoted(self, post):
         """True if upvoted else False"""

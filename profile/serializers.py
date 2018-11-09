@@ -17,12 +17,14 @@ class ProfileSerializer(serializers.ModelSerializer):
     state = serializers.SerializerMethodField(required=False, allow_null=True)
     country = serializers.SerializerMethodField(required=False, allow_null=True)
     official_page = serializers.SerializerMethodField(required=False, allow_null=True)
+    followingCount = serializers.SerializerMethodField(method_name='get_following_count')
+    followersCount = serializers.SerializerMethodField(method_name='get_followers_count')
 
     class Meta:
         model = Profile
         fields = ('username', 'bio', 'image', 'following', 'cover',
                   'first_name', 'last_name', 'city', 'state', 'country',
-                  'official_page')
+                  'official_page', 'followingCount', 'followersCount')
         read_only_fields = ('username',)
 
     def get_image(self, obj):
@@ -67,4 +69,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         return obj.user.country
 
     def get_official_page(self, obj):
-        return  obj.user.official_page
+        return obj.user.official_page
+
+    def get_following_count(self, obj):
+        return obj.follows.count()
+
+    def get_followers_count(self, obj):
+        print(Profile.objects.all().filter(follows__user__username=obj.user.username))
+        return Profile.objects.all().filter(follows__user__username=obj.user.username).count()
