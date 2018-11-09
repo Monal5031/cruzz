@@ -112,31 +112,29 @@ Use the given URL as Postman's target URL.
     
     #### Request
     
-    - 
-        Method: POST
-        
-        Auth Type: Bearer Token
-        
-        Header:
-        
-        | Key                | Value                   |
-        |:------------------:|:-----------------------:|
-        | Content-Type       | application/json        |
-        | Authorization      | Token token_value_here  |
+    Method: POST
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
 
-        
-        Body:
-        
-        ```json
-        {
-          "user": {
-            "username": "username_here",
-            "email": "email_here",
-            "first_name": "new_first_name_here",
-            "other fields": "values_here"
-          }
-        }
-        ```
+    Body:
+    
+    ```json
+    {
+      "user": {
+        "username": "username_here",
+        "email": "email_here",
+        "first_name": "new_first_name_here",
+        "other fields": "values_here"
+      }
+    }
+    ```
     
     #### Response
     ```json
@@ -628,6 +626,91 @@ Use the given URL as Postman's target URL.
     }
     ```
 
+6. Delete a post
+    
+    #### Request
+    
+    URL:
+    ```
+        <server_url>/api/post/<post_slug>/delete/
+        
+    ```
+    
+    Method: GET
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    No response body, just a `204 NO_CONTENT` status.
+
+7. Add or remove post from favorite.
+
+    #### Request
+    
+    URL:
+    ```
+        <server_url>/api/post/<post_slug>/favorite/
+        
+    ```
+    
+    Method: GET
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    ```json
+    {
+        "post": {
+            "author": {
+                // author data
+            },
+         "favorited": true
+         // post data
+        }
+    }
+    ```
+    
+    Method: DELETE
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    ```json
+    {
+        "post": {
+            "author": {
+                // author data
+            },
+        "favorited": false
+        // post data
+        }
+    }
+    ```
+
 
 ### Page API
 
@@ -666,3 +749,192 @@ Use the given URL as Postman's target URL.
         ] 
     }
     ```
+
+### Comment API
+
+1. Create a comment
+    
+    #### Request
+    
+    URL:
+    ```
+        <server_url>/api/post/<post_slug>/comments/create/
+    ```
+    
+    Method: POST
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    Body
+    ```json
+    {
+       "comment": {
+           "body": "body of cmment"
+       }
+    }
+    ```
+    
+    #### Response
+    
+    ```json
+    {
+        "comment": {
+            "id": int id of comment,
+            "author": {
+                // author data
+            },
+            "body": "body of comment",
+            "createdAt": "timestamp",
+            "updatedAt": "timestamp",
+            "post_slug": "slug of post"
+        }
+    }
+    ```
+
+2. View all comments of a post.
+    
+    #### Request
+    
+    URL:
+    ```
+        <server_url>/api/post/<post_slug>/comments/view?limit=N&offset=M
+    ```
+    
+    N = number of comments to fetch.
+    
+    M = number of comments to send from fetched.
+    
+    Method: GET
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    ```json
+    {
+        "comments": [
+            // first comment,
+            // second comment
+        ]
+    }
+    ```
+
+3. View a single comment
+
+    #### Request
+    
+    URL:
+    ```
+        <server_url>/api/post/<post_slug>/comments/view/<commnt_pk>/
+    ```
+    
+    Method: GET
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    ```json
+    {
+        "comment": {
+            "id": int id of comment,
+            "author": {
+                // author data
+            },
+            "body": "body of comment",
+            "createdAt": "timestamp",
+            "updatedAt": "timestamp",
+            "post_slug": "slug of post"
+        }
+    }
+    ```
+
+4. Update a comment
+
+    #### Request
+    
+    URL:
+    ```
+        <server_url>/api/post/<post_slug>/comments/update/<comment_pk>
+        
+    ```
+    
+    Method: POST
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    Body
+    
+    ```json
+    {
+        "comment": {
+            "field_to_update": "updated_value"
+        }
+    }
+    ```
+    
+    #### Response
+    
+    ```json
+    {
+        "comment": {
+            "author": {
+                // author data
+            },
+            // comment data
+        }
+    }
+    ```
+
+5. Delete a comment
+    
+    #### Request
+    
+    URL:
+    ```
+        <server_url>/api/post/<post_slug>/comments/delete/<comment_pk>/
+        
+    ```
+    
+    Method: GET
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    No response body, just a `204 NO_CONTENT` status.

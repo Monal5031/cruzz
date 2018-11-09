@@ -14,7 +14,6 @@ from post.serializers import PostSerializer, CommentSerializer, TagSerializer
 
 
 class PostCreateView(mixins.CreateModelMixin, GenericAPIView):
-    lookup_field = 'slug'
     permission_classes = (IsAuthenticatedOrReadOnly,)
     renderer_classes = (PostJSONRenderer,)
     serializer_class = PostSerializer
@@ -160,7 +159,31 @@ class PostUpdateView(mixins.RetrieveModelMixin, GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class CommentsListCreateAPIView(generics.ListCreateAPIView):
+class CommentCreateAPIView(mixins.CreateModelMixin, GenericAPIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    renderer_classes = (CommentJSONRenderer,)
+    serializer_class = CommentSerializer
+
+    def post(self, request, post_slug=None):
+        serializer_context = {
+            'author': request.user.username,
+            'request': request
+        }
+
+        try:
+            serializer_context['post'] = Post.objects.get(slug=post_slug)
+        except Post.DoesNotExist:
+            raise NotFound("A post with this slug does not exist.")
+
+        serializer_data = request.data.get('comment', {})
+        serializer = self.serializer_class(data=serializer_data, context=serializer_context)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CommentListAPIView(mixins.ListModelMixin, GenericAPIView):
     lookup_field = 'post__slug'
     lookup_url_kwarg = 'post_slug'
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -169,39 +192,101 @@ class CommentsListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
 
     def filter_queryset(self, queryset):
-        # only want comments for a specific post
-        filters = {self.lookup_field: self.kwargs[self.lookup_url_kwarg]}
+        filters = {
+            self.lookup_field: self.kwargs[self.lookup_url_kwarg]
+        }
 
         return queryset.filter(**filters)
 
-    def create(self, request, post_slug=None):
-        data = request.data.get('comment', {})
-        context = {'author': request.user.profile}
+    def get(self, request, post_slug=None):
+        serializer_context = {'request': request}
+        page = LimitOffsetPagination()
+        paginated_result = page.paginate_queryset(self.filter_queryset(self.queryset), request)
+
+        serializer = self.serializer_class(paginated_result, context=serializer_context, many=True)
+
+        new_data = {
+            'comments': serializer.data
+        }
+
+        return Response(new_data)
+
+
+class CommentSingleAPIView(mixins.RetrieveModelMixin, GenericAPIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    queryset = Comment.objects.all()
+    renderer_classes = (CommentJSONRenderer,)
+    serializer_class = CommentSerializer
+
+    def get(self, request, post_slug=None, comment_pk=None):
+        serializer_context = {'request': request}
 
         try:
-            context['post'] = Post.objects.get(slug=post_slug)
-        except Post.DoesNotExist:
-            raise NotFound("A post with this slug does not exist.")
+            queryset = self.queryset.filter(post__slug=post_slug)
+            serializer_instance = queryset.get(pk=comment_pk)
+        except Comment.DoesNotExist:
+            raise NotFound('Comment with this ID was not found.')
 
-        serializer = self.serializer_class(data=data, context=context)
+        serializer = self.serializer_class(serializer_instance, context=serializer_context)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CommentUpdateAPIView(mixins.RetrieveModelMixin, GenericAPIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    queryset = Comment.objects.all()
+    renderer_classes = (CommentJSONRenderer,)
+    serializer_class = CommentSerializer
+
+    def post(self, request, post_slug=None, comment_pk=None):
+        serializer_context = {'request': request}
+
+        try:
+            queryset = self.queryset.filter(post__slug=post_slug)
+            serializer_instance = queryset.get(pk=comment_pk)
+        except Comment.DoesNotExist:
+            raise NotFound('Comment with this ID was not found.')
+
+        serializer_data = request.data.get('comment', {})
+
+        serializer = self.serializer_class(
+            serializer_instance, context=serializer_context,
+            data=serializer_data, partial=True
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CommentsDestroyAPIView(generics.DestroyAPIView):
-    lookup_url_kwarg = 'comment_pk'
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
     queryset = Comment.objects.all()
 
-    def destroy(self, request, post_slug=None, comment_pk=None):
+    def get(self, request, post_slug=None, comment_pk=None):
         try:
-            comment = Comment.objects.get(pk=comment_pk)
+            queryset = self.queryset.filter(post__slug=post_slug)
+            comment = queryset.get(pk=comment_pk)
         except Comment.DoesNotExist:
             raise NotFound("A comment with this ID does not exist.")
 
         comment.delete()
+
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+
+class PostDestroyAPIView(generics.DestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    queryset = Post.objects.all()
+
+    def get(self, request, post_slug=None):
+        try:
+            post = self.queryset.get(slug=post_slug)
+        except Post.DoesNotExist:
+            raise NotFound('A post with this slug was not found')
+
+        print(post)
+        post.delete()
 
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
@@ -226,7 +311,7 @@ class PostsFavoriteAPIView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, post_slug=None):
+    def get(self, request, post_slug=None):
         profile = self.request.user.profile
         serializer_context = {'request': request}
 
@@ -242,13 +327,13 @@ class PostsFavoriteAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class TagListAPIView(generics.ListAPIView):
+class TagListAPIView(mixins.ListModelMixin, GenericAPIView):
     queryset = Tag.objects.all()
     pagination_class = None
     permission_classes = (AllowAny,)
     serializer_class = TagSerializer
 
-    def list(self, request):
+    def get(self, request):
         serializer_data = self.get_queryset()
         serializer = self.serializer_class(serializer_data, many=True)
 

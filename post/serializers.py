@@ -69,12 +69,14 @@ class CommentSerializer(serializers.ModelSerializer):
     author = ProfileSerializer(required=False)
     createdAt = serializers.SerializerMethodField(method_name='get_created_at')
     updatedAt = serializers.SerializerMethodField(method_name='get_updated_at')
+    post_slug = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
-        fields = ('id', 'author', 'body', 'createdAt', 'updatedAt',)
+        fields = ('id', 'author', 'body', 'createdAt', 'updatedAt', 'post_slug')
 
     def create(self, validated_data):
+        print('hello')
         post = self.context['post']
         author = User.objects.get(username=self.context['author'])
 
@@ -85,6 +87,9 @@ class CommentSerializer(serializers.ModelSerializer):
 
     def get_updated_at(self, instance):
         return instance.updated_at.isoformat()
+
+    def get_post_slug(self, instance):
+        return instance.post.slug
 
 
 class TagSerializer(serializers.ModelSerializer):

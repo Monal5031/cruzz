@@ -11,5 +11,6 @@ class PostJSONRenderer(VConnectJSONRenderer):
 
 class CommentJSONRenderer(VConnectJSONRenderer):
     object_label = 'comment'
+    object_label_plural = 'comments'
     pagination_object_label = 'comments'
     pagination_count_label = 'commentsCount'

@@ -83,6 +83,6 @@ Migrate database and runserver
     ```
 
 
-To test things out, go through the URL endpoints in [APT_Testing_docs](API_Testing_docs.md).
+To test things out, go through the URL endpoints in [APT_Testing_docs](API_Docs.md).
 
 You can use `Postman` or similar services for testing endpoints.
