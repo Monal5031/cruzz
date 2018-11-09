@@ -66,22 +66,66 @@ class AuthenticationTests(StaticLiveServerTestCase):
             'is_active': True
         }
         test_user = create_custom_user(test_user_data)
-        self.assertRaisesRegexp(ValidationError, 'This field cannot be blank', test_user.full_clean)
+        self.assertRaisesRegexp(
+            ValidationError,
+            'This field cannot be blank',
+            test_user.full_clean
+        )
 
-    # def test_login_with_correct_credentials(self):
-    #     pass
-    #
-    # def test_login_with_incorrect_username(self):
-    #     pass
-    #
-    # def test_login_with_incorrect_email(self):
-    #     pass
-    #
-    # def test_login_with_incorrect_password(self):
-    #     pass
-    #
-    # def test_update_user_with_valid_details(self):
-    #     pass
-    #
-    # def test_update_user_with_invalid_details(self):
-    #     pass
+    def test_login_with_correct_credentials(self):
+        pass
+
+    def test_login_with_incorrect_username(self):
+        pass
+
+    def test_login_with_incorrect_email(self):
+        pass
+
+    def test_login_with_incorrect_password(self):
+        pass
+
+    def test_update_user_with_valid_username(self):
+        self.dummy_valid_user1.username = 'my_new_username'
+        self.dummy_valid_user1.save()
+
+        self.assertEqual(self.dummy_valid_user1.username, 'my_new_username')
+
+    def test_update_user_with_valid_first_name(self):
+        self.dummy_valid_user1.first_name = 'new first name'
+        self.dummy_valid_user1.save()
+
+        self.assertEqual(self.dummy_valid_user1.first_name, 'new first name')
+
+    def test_update_user_with_valid_last_name(self):
+        self.dummy_valid_user1.last_name = 'new last name'
+        self.dummy_valid_user1.save()
+
+        self.assertEqual(self.dummy_valid_user1.last_name, 'new last name')
+
+    def test_update_user_with_valid_city(self):
+        self.dummy_valid_user1.city = 'new city'
+        self.dummy_valid_user1.save()
+
+        self.assertEqual(self.dummy_valid_user1.city, 'new city')
+
+    def test_update_user_with_valid_state(self):
+        self.dummy_valid_user1.state = 'new state'
+        self.dummy_valid_user1.save()
+
+        self.assertEqual(self.dummy_valid_user1.state, 'new state')
+
+    def test_update_user_with_valid_country(self):
+        self.dummy_valid_user1.country = 'new country'
+        self.dummy_valid_user1.save()
+
+        self.assertEqual(self.dummy_valid_user1.country, 'new country')
+
+    def test_update_user_with_invalid_details(self):
+        self.dummy_valid_user1.email = ''
+        self.dummy_valid_user1.save()
+
+        self.assertRaisesRegexp(
+            ValidationError,
+            'This field cannot be blank',
+            self.dummy_valid_user1.full_clean
+        )
