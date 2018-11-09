@@ -4,6 +4,7 @@ import string
 
 from authentication.models import User
 from post.models import Post, Comment, Tag
+from profile.models import Profile
 
 DEFAULT_CHAR_STRING = string.ascii_lowercase + string.digits
 
@@ -110,9 +111,14 @@ def create_official_page():
     return user
 
 
-def create_profile(user_data=None):
-    if not user_data:
-        return create_custom_user(user_data).profile
+def create_profile(data=None):
+    if data is not None:
+        profile = create_custom_user(data['user']).profile
+        profile.bio = data['bio']
+        profile.cover = data['cover']
+        profile.image = data['image']
+        profile.save()
+        return profile
     return create_valid_user().profile
 
 
@@ -168,7 +174,7 @@ def create_custom_comment(comment_data):
 
 def create_tag():
     tags = Tag.objects.create(
-        tag=generate_random_string(7)
+        tag=generate_random_string(size=7)
     )
 
     tags.save()
@@ -176,4 +182,8 @@ def create_tag():
 
 
 def create_custom_tags(tags=None):
-    return [Tag.objects.create(tag=tag).save() for tag in tags]
+    ret_val = []
+    for tag in tags:
+        ret_val.append(Tag.objects.create(tag=tag, slug=tag))
+    # return [Tag.objects.create(tag=tag).save() for tag in tags]
+    return ret_val

@@ -129,3 +129,8 @@ class AuthenticationTests(StaticLiveServerTestCase):
             'This field cannot be blank',
             self.dummy_valid_user1.full_clean
         )
+
+    def test_create_superuser(self):
+        self.assertEqual(self.superuser.username, 'admin')
+        self.assertEqual(self.superuser.is_superuser, True)
+        self.assertEqual(self.superuser.is_staff, True)

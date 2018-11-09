@@ -1,26 +1,34 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from rest_framework.test import APIRequestFactory
 
+from core.utils import create_superuser, create_custom_tags, create_tag
+
 
 class TagsTests(StaticLiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        # stuff to do
+        cls.superuser = create_superuser()
         super(TagsTests, cls).setUpClass()
 
     def setUp(self):
-        # stuff to do
         pass
 
     def tearDown(self):
-        # stuff to do
         pass
 
     @classmethod
     def tearDownClass(cls):
-        # stuff to do
+        cls.superuser.delete()
         super(TagsTests, cls).tearDownClass()
 
     def test_retrive_all_tags(self):
-        pass
+        tags = ['newpost', 'dummy test', 'something new']
+        created_tags = create_custom_tags(tags)
+
+        self.assertEqual(str(created_tags[0]) in tags, True)
+        self.assertIn(str(created_tags[0]), tags)
+
+        new_tag = create_tag()
+
+        self.assertNotIn(str(new_tag), tags)
