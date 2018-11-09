@@ -12,6 +12,7 @@ python-decouple = "*"
 django-widget-tweaks = "*"
 djangorestframework = "*"
 django-cors-headers="*"
+coverage = "*"
 
 [requires]
 python_version = "3.6"
