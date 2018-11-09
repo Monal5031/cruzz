@@ -4,14 +4,15 @@ from django.conf.urls import url
 from post.views import (PostsFavoriteAPIView, CommentCreateAPIView,
                         CommentListAPIView, CommentSingleAPIView,
                         CommentUpdateAPIView, CommentsDestroyAPIView, TagListAPIView,
-                        PostsFeedAPIView, PostCreateView, PostsVoteAPIView,
+                        PostsFeedAPIView, PostCreateView, PostsUpvoteAPIView, PostsDownvoteAPIView,
                         PostDisplayView, PostSingleView, PostUpdateView, PostDestroyAPIView)
 
 
 urlpatterns = [
     url(r'^feed/?$', PostsFeedAPIView.as_view()),
     url(r'^(?P<post_slug>[-\w]+)/favorite/?$', PostsFavoriteAPIView.as_view()),
-    url(r'^(?P<post_slug>[-\w]+)/vote/?$', PostsVoteAPIView.as_view()),
+    url(r'^(?P<post_slug>[-\w]+)/upvote/?$', PostsUpvoteAPIView.as_view()),
+    url(r'^(?P<post_slug>[-\w]+)/downvote/?$', PostsDownvoteAPIView.as_view()),
     url(r'^(?P<post_slug>[-\w]+)/comments/create/?$', CommentCreateAPIView.as_view()),
     url(r'^(?P<post_slug>[-\w]+)/comments/view/?$', CommentListAPIView.as_view()),
     url(r'^(?P<post_slug>[-\w]+)/comments/view/(?P<comment_pk>[\d]+)?$', CommentSingleAPIView.as_view()),

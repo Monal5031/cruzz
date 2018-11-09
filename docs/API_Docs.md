@@ -179,6 +179,8 @@ Use the given URL as Postman's target URL.
         "profile": {
             "username": "username_of_requested_user",
             "following": "bool_depending_we_follow_the_user_or_not",
+            "followingCount": number of people user follows,
+            "followersCount": number of followers of user,
             "other_fields": "values_here"
         },
         "user": {
@@ -231,6 +233,8 @@ Use the given URL as Postman's target URL.
             "image": "img_of_requested_user",
             "following": true,
             "cover": "cover_of_requested_user"
+            "followingCount": number of people user follows,
+            "followersCount": number of followers of user,
         }
     }
     ```
@@ -276,6 +280,8 @@ Use the given URL as Postman's target URL.
             "image": "img_of_requested_user",
             "following": false,
             "cover": "cover_of_requested_user"
+            "followingCount": number of people user follows,
+            "followersCount": number of followers of user,
         }
     }
     ```
@@ -712,13 +718,13 @@ Use the given URL as Postman's target URL.
     }
     ```
 
-8. Upvote a post
+8. Adding and removing an upvote on post
 
     #### Request
     
     URL:
     ```
-        <server_url>/api/post/<post_slug>/vote/
+        <server_url>/api/post/<post_slug>/upvote/
         
     ```
     
@@ -747,7 +753,6 @@ Use the given URL as Postman's target URL.
         }
     }
     ```
-9. Downvote a post
     
     Method: DELETE
     
@@ -768,7 +773,69 @@ Use the given URL as Postman's target URL.
             "author": {
                 // author data
             },
-        "downvoted": true,
+        "upvoted": false,
+        "upvotesCount": int count
+        // post data
+        }
+    }
+    ```
+
+9. Adding and removing an downvote on post
+
+    #### Request
+    
+    URL:
+    ```
+        <server_url>/api/post/<post_slug>/downvote/
+        
+    ```
+    
+    Method: GET
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    ```json
+    {
+        "post": {
+            "author": {
+                // author data
+            },
+         "downvote": true,
+         "downvotesCount": int count
+         // post data
+        }
+    }
+    ```
+    
+    Method: DELETE
+    
+    Auth Type: Bearer Token
+    
+    Header:
+    
+    | Key                | Value                   |
+    |:------------------:|:-----------------------:|
+    | Content-Type       | application/json        |
+    | Authorization      | Token token_value_here  |
+    
+    #### Response
+    
+    ```json
+    {
+        "post": {
+            "author": {
+                // author data
+            },
+        "downvoted": false,
         "downvotesCount": int count
         // post data
         }

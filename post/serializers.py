@@ -24,6 +24,8 @@ class PostSerializer(serializers.ModelSerializer):
     downvoted = serializers.SerializerMethodField()
     downvotesCount = serializers.SerializerMethodField(method_name='get_downvotes_count')
 
+    commentsCount = serializers.SerializerMethodField(method_name='get_comments_count')
+
     tagList = TagRelatedField(many=True, required=False, source='tags')
 
     # define methods for these fields
@@ -36,7 +38,8 @@ class PostSerializer(serializers.ModelSerializer):
             'author', 'body', 'createdAt',
             'description', 'favorited', 'favoritesCount',
             'slug', 'tagList', 'title', 'updatedAt',
-            'upvoted', 'upvotesCount', 'downvoted', 'downvotesCount'
+            'upvoted', 'upvotesCount', 'downvoted', 'downvotesCount',
+            'commentsCount'
         )
 
     def create(self, validated_data):
@@ -98,6 +101,9 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_updated_at(self, instance):
         return instance.updated_at.isoformat()
+
+    def get_comments_count(self, instance):
+        return instance.comments.count()
 
 
 class CommentSerializer(serializers.ModelSerializer):
