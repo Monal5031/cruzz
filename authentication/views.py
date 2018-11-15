@@ -1,5 +1,12 @@
 # Django
+from django.contrib.auth import login
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 from rest_framework import status
 from rest_framework.generics import RetrieveUpdateAPIView
@@ -8,8 +15,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 # Local Django
+from authentication.models import User
 from authentication.serializers import RegistrationSerializer, LoginSerializer, UserUpdateSerializer
 from authentication.renderers import UserJSONRenderer
+from core.tokens import account_activation_token
 
 
 def land(request):
@@ -36,6 +45,27 @@ class RegistrationAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
+        user = User.objects.get(email=serializer.data['email'])
+
+        current_site = get_current_site(request)
+        print(current_site)
+        mail_subject = 'Activate your Vconnect account.'
+        message = render_to_string('acc_active_email.html', {
+            'user': user,
+            'domain': current_site,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
+            'token': account_activation_token.make_token(user),
+        })
+        print(message)
+        to_email = serializer.data['email']
+        email = EmailMessage(
+            mail_subject, message, to=[to_email]
+        )
+        print(email, to_email)
+
+        # email.send()
+
+        serializer.data['is_active'] = False
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -98,3 +128,18 @@ class UserRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def activate(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        return render(request, 'email_confirmed.html')
+    else:
+        return HttpResponse('Activation link is invalid!')

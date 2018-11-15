@@ -187,6 +187,13 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "cruzz/static"),
 ]
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_PORT = 587
+
+
 PWA_APP_NAME = 'Cruzz'
 PWA_APP_DESCRIPTION = "A sexy description, which will blow your mind."
 PWA_APP_THEME_COLOR = '#455A64'

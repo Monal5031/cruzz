@@ -47,9 +47,11 @@ class PostDisplayView(mixins.ListModelMixin, GenericAPIView):
             queryset = queryset.filter(author__user__username=author)
 
         tag = self.request.query_params.get('tag', None)
+        print(tag)
 
         if tag is not None:
             queryset = queryset.filter(tags__tag=tag)
+            print('tag:', queryset)
 
         favorited_by = self.request.query_params.get('favorited', None)
 

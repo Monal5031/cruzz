@@ -29,6 +29,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
     country = serializers.CharField(max_length=50, required=False)
     is_superuser = serializers.NullBooleanField(default=False, required=False)
     is_staff = serializers.NullBooleanField(default=False, required=False)
+    is_active = serializers.NullBooleanField(default=False, required=False)
+    message = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -37,7 +39,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = [
             'email', 'username', 'password',
             'token', 'first_name', 'last_name',
-            'city', 'state', 'country', 'is_superuser', 'is_staff'
+            'city', 'state', 'country', 'is_superuser', 'is_staff',
+            'is_active', 'message'
         ]
 
     def create(self, validated_data):
@@ -45,6 +48,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
         if validated_data['is_superuser'] or validated_data['is_staff']:
             return User.objects.create_superuser(validated_data)
         return User.objects.create_user(validated_data)
+
+    def get_message(self, obj):
+        if obj.is_active:
+            return 'Your email address is already confirmed'
+        return 'Please confirm your email address to complete the registration.'
 
 
 class LoginSerializer(serializers.Serializer):
