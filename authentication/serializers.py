@@ -103,7 +103,7 @@ class LoginSerializer(serializers.Serializer):
         # it is worth checking. Raise an exception in this case.
         if not user.is_active:
             raise serializers.ValidationError(
-                'This user has been deactivated.'
+                'Your email is not yet confirmed or you have been removed from the platform'
             )
 
         # The `validate` method should return a dictionary of validated data.
