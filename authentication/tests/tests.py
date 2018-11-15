@@ -7,6 +7,7 @@ from authentication import views
 
 
 class AuthAPITest(TestCase):
+    pass
 
     # def test_register_login_update_user(self):
     #     # create new user
