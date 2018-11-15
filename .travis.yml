@@ -22,6 +22,8 @@ env:
   -G_KEY=123456test
   -G_SKEY=123456test
   -MODE=prod
+  -EMAIL=test@cruzz.com
+  -PASSWORD=test12345
 
 install:
   - pip install -r requirements.txt
