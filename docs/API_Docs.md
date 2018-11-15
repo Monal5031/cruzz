@@ -1,4 +1,8 @@
-# Document contains information about the URL endpoints of the API, instructions over how to make request and what response to expect
+# API Docs
+
+Authored By: [Monal Shadi](https://github.com/Monal5031)
+
+## Document contains information about the URL endpoints of the API, instructions over how to make request and what response to expect
 
 :: Note :: Before testing any of the following urls make sure you have a local DB setup, server running and postman installed.
 
