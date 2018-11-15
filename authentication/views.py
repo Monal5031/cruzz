@@ -63,7 +63,7 @@ class RegistrationAPIView(APIView):
         )
         print(email, to_email)
 
-        # email.send()
+        email.send()
 
         serializer.data['is_active'] = False
         return Response(serializer.data, status=status.HTTP_201_CREATED)
