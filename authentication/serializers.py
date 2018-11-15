@@ -84,24 +84,26 @@ class LoginSerializer(serializers.Serializer):
                 'A password is required to log in.'
             )
 
-        # The `authenticate` method is provided by Django and handles checking
-        # for a user that matches this email/password combination. Notice how
-        # we pass `username` as the `username` value since in our User
-        # model we set `USERNAME_FIELD` as `username`.
-        user = authenticate(username=username, password=password)
-
         # If no user was found matching this email/password combination then
         # `authenticate` will return `None`. Raise an exception in this case.
-        if user is None:
+        try:
+            user = User.objects.get(username=username)
+        except Exception:
             raise serializers.ValidationError(
                 'A user with this email and password was not found.'
             )
+        if user.is_active:
+            # The `authenticate` method is provided by Django and handles checking
+            # for a user that matches this email/password combination. Notice how
+            # we pass `username` as the `username` value since in our User
+            # model we set `USERNAME_FIELD` as `username`.
+            user = authenticate(username=username, password=password)
 
         # Django provides a flag on our `User` model called `is_active`. The
         # purpose of this flag is to tell us whether the user has been banned
         # or deactivated. This will almost never be the case, but
         # it is worth checking. Raise an exception in this case.
-        if not user.is_active:
+        else:
             raise serializers.ValidationError(
                 'Your email is not yet confirmed or you have been removed from the platform'
             )
