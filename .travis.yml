@@ -28,7 +28,7 @@ env:
 install:
   - pip install -r requirements.txt
 before_script:
-  - psql -c "CREATE USER cruzz WITH CREATEUSER PASSWORD 'cruzz';" -U postgres
+  - psql -c "CREATE USER cruzz WITH PASSWORD 'cruzz';" -U postgres
   - psql -c "ALTER USER cruzz CREATEDB;" -U postgres
   - psql -c "CREATE DATABASE cruzz_db;" -U postgres
   - psql -c "GRANT ALL ON DATABASE cruzz_db TO cruzz;" -U postgres
