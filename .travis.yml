@@ -32,6 +32,7 @@ before_script:
   - psql -c "ALTER USER cruzz CREATEDB;" -U postgres
   - psql -c "CREATE DATABASE cruzz_db;" -U postgres
   - psql -c "GRANT ALL ON DATABASE cruzz_db TO cruzz;" -U postgres
+  - psql -c "ALTER ROLE cruzz Superuser;" -U postgres
 
 script:
   - python manage.py makemigrations
